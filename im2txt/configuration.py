@@ -84,7 +84,7 @@ class TrainingConfig(object):
   def __init__(self):
     """Sets the default training hyperparameters."""
     # Number of examples per epoch of training data.
-    self.num_examples_per_epoch = 32000
+    self.num_examples_per_epoch = 30000
 
     # Optimizer for training the model.
     self.optimizer = "SGD"

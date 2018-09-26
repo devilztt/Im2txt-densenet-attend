@@ -1,11 +1,26 @@
 # -*- coding: utf-8 -*-
 import os
+import argparse
 
 
+def parse_args(check=True):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--learning_rate', type=float, default=1)
+
+    FLAGS, unparsed = parser.parse_known_args()
+    return FLAGS, unparsed
+
+
+FLAGS, unparsed = parse_args()
 
 if __name__ == '__main__':
+
+    print('current working dir [{0}]'.format(os.getcwd()))
+    w_d = os.path.dirname(os.path.abspath(__file__))
+    print('change wording dir to [{0}]'.format(w_d))
+    os.chdir(w_d)
     
-    learning_rate=1
+    learning_rate=FLAGS.learning_rate
     print(os.getcwd())
     for i in range(40):
        # train 1 epoch
