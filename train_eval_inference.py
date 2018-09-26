@@ -21,12 +21,13 @@ if __name__ == '__main__':
     os.chdir(w_d)
     
     learning_rate=FLAGS.learning_rate
+    number_of_steps=3750
     print(os.getcwd())
     for i in range(40):
        # train 1 epoch
         print('################    train    ################')
         print(os.getcwd)
-        os.system('python3 ./train.py' +' --learning_rate={0}'.format(learning_rate) )
+        os.system('python3 ./train.py' +' --learning_rate={0}'.format(learning_rate)+' --number_of_steps={0}'.format(number_of_steps) )
 
         # eval
         print('################    eval    ################')
@@ -38,5 +39,6 @@ if __name__ == '__main__':
         os.system('python3 ./run_inference.py')
 
         learning_rate=learning_rate*0.75
+        number_of_steps=number_of_steps*(i+2)
 
 

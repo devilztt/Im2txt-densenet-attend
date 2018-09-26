@@ -37,6 +37,8 @@ tf.flags.DEFINE_boolean("train_inception", False,
 tf.flags.DEFINE_integer("number_of_steps", 3750, "Number of training steps.")
 
 tf.flags.DEFINE_float("learning_rate", 0.1, "learning_rate.")
+
+
 tf.flags.DEFINE_integer("log_every_n_steps", 30,
                         "Frequency at which loss and global step are logged.")
 
