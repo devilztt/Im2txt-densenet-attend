@@ -24,7 +24,6 @@ import tensorflow as tf
 import numpy as np
 
 
-
 def parse_sequence_example(serialized, image_feature, caption_feature):
   """Parses a tensorflow.SequenceExample into an image and caption.
 
@@ -195,14 +194,27 @@ def batch_with_dynamic_pad(images_and_captions,
   """
   enqueue_list = []
   for image, caption in images_and_captions:
+    
+    def true_fn():
+      return tf.slice(caption, [0], [16])
+    
+    def false_fn():
+      return caption
+    
     caption_length = tf.shape(caption)[0]
+
+    caption=tf.cond(caption_length>16,true_fn=true_fn,false_fn=false_fn)
+
+    caption_length = tf.shape(caption)[0]
+
+
     input_length = tf.expand_dims(tf.subtract(caption_length, 1), 0)#先减1再扩充维度
     #对caption进行切片操作，
     input_seq = tf.slice(caption, [0], input_length)#tf.slice(inputs,begin,size,name='')
     target_seq = tf.slice(caption, [1], input_length)
     indicator = tf.ones(input_length, dtype=tf.int64)#tf.ones(shape, dtype=tf.float32, name=None)
     
-    padding_lenth=tf.subtract(40,caption_length)
+    padding_lenth=tf.subtract(16,caption_length)
     padding=tf.zeros([padding_lenth],dtype=tf.int64)
     
     input_seq=tf.concat([input_seq,padding],0)

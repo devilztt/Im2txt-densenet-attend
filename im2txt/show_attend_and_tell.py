@@ -411,7 +411,7 @@ class ShowAndTellModel(object):
         # sequence_length = tf.reduce_sum(self.input_mask, 1)
         # print(sequence_length.get_shape())
         #因为前面在处理序列数据的时候padding后的总长度有37，所以这里循环37次
-        for t in range(39):
+        for t in range(15):
             context, alpha = self._attention_layer(features, features_proj, h, reuse=(t!=0))#将features和h传入attention层，h代表当前状态，关注的是原图哪个区域
             alpha_list.append(alpha)#将得到的alpha添加到列表
 
