@@ -22,7 +22,7 @@ from __future__ import print_function
 
 import tensorflow as tf
 import numpy as np
-from keras.preprocessing import sequence
+
 
 
 def parse_sequence_example(serialized, image_feature, caption_feature):
