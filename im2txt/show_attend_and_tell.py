@@ -117,7 +117,7 @@ class ShowAndTellModel(object):
     self.H = 1024
     
     #时间步长
-    self.T = 16
+    self.T = config.number_step
 
     self.selector=True
 
@@ -205,7 +205,8 @@ class ShowAndTellModel(object):
       images, input_seqs, target_seqs, input_mask = (
           input_ops.batch_with_dynamic_pad(images_and_captions,
                                            batch_size=self.config.batch_size,
-                                           queue_capacity=queue_capacity))
+                                           queue_capacity=queue_capacity,
+                                           num_step=self.config.number_step))
 
     self.images = images
     self.input_seqs = input_seqs
@@ -306,28 +307,28 @@ class ShowAndTellModel(object):
           return context, alpha
   
   def _decode_lstm(self, x, h, context, dropout=False, reuse=False):
-        with tf.variable_scope('logits', reuse=reuse):
-            w_h = tf.get_variable('w_h', [self.H, self.M], initializer=self.weight_initializer)
-            b_h = tf.get_variable('b_h', [self.M], initializer=self.const_initializer)
-            # w_out = tf.get_variable('w_out', [self.M, self.V], initializer=self.weight_initializer)
-            # b_out = tf.get_variable('b_out', [self.V], initializer=self.const_initializer)
+      with tf.variable_scope('logits', reuse=reuse):
+          w_h = tf.get_variable('w_h', [self.H, self.M], initializer=self.weight_initializer)
+          b_h = tf.get_variable('b_h', [self.M], initializer=self.const_initializer)
+          # w_out = tf.get_variable('w_out', [self.M, self.V], initializer=self.weight_initializer)
+          # b_out = tf.get_variable('b_out', [self.V], initializer=self.const_initializer)
 
-            if dropout:
-                h = tf.nn.dropout(h, 0.5)
-            h_logits = tf.matmul(h, w_h) + b_h # self.M
+          if dropout:
+              h = tf.nn.dropout(h, 0.5)
+          h_logits = tf.matmul(h, w_h) + b_h # self.M
 
-            if self.ctx2out:
-                w_ctx2out = tf.get_variable('w_ctx2out', [self.D, self.M], initializer=self.weight_initializer)
-                h_logits += tf.matmul(context, w_ctx2out)#self.M
+          if self.ctx2out:
+              w_ctx2out = tf.get_variable('w_ctx2out', [self.D, self.M], initializer=self.weight_initializer)
+              h_logits += tf.matmul(context, w_ctx2out)#self.M
 
-            if self.prev2out:
-                h_logits += x
-            h_logits = tf.nn.tanh(h_logits)
+          if self.prev2out:
+              h_logits += x
+          h_logits = tf.nn.tanh(h_logits)
 
-            if dropout:
-                h_logits = tf.nn.dropout(h_logits, 0.5)
-            # out_logits = tf.matmul(h_logits, w_out) + b_out
-            return h_logits
+          if dropout:
+              h_logits = tf.nn.dropout(h_logits, 0.5)
+          # out_logits = tf.matmul(h_logits, w_out) + b_out
+          return h_logits
 
   def _selector(self, context, h, reuse=False):
       with tf.variable_scope('selector', reuse=reuse):
@@ -363,7 +364,7 @@ class ShowAndTellModel(object):
      
       features = self._batch_norm(features, mode=self.mode, name='conv_features') #将特征向量归一化
                 
-      features_proj = self._project_features(features=features) #经过一个全连接 进行变换
+      features_proj = self._project_features(features=features) #经过一个全连接 生成e0
 
       alpha_list = []
 
@@ -376,7 +377,7 @@ class ShowAndTellModel(object):
             output_keep_prob=self.config.lstm_dropout_keep_prob)
 
       
-      c, h = self._get_initial_lstm(features=features) #用cnn后的特征向量初始话c 和 h
+      c, h = self._get_initial_lstm(features=features) #将特征图在196这个维度求和平均得到一个1*512的特征向量初始话c 和 h
 
       if self.mode == "inference":
         # In inference mode, use concatenated states for convenient feeding and
@@ -411,7 +412,7 @@ class ShowAndTellModel(object):
         # sequence_length = tf.reduce_sum(self.input_mask, 1)
         # print(sequence_length.get_shape())
         #因为前面在处理序列数据的时候padding后的总长度有37，所以这里循环37次
-        for t in range(15):
+        for t in range(self.T-1):
             context, alpha = self._attention_layer(features, features_proj, h, reuse=(t!=0))#将features和h传入attention层，h代表当前状态，关注的是原图哪个区域
             alpha_list.append(alpha)#将得到的alpha添加到列表
 

@@ -56,12 +56,12 @@ class ModelConfig(object):
     self.num_preprocess_threads = 4
 
     # Batch size.
-    self.batch_size = 8
+    self.batch_size = 2
 
     # File containing an Inception v3 checkpoint to initialize the variables
     # of the Inception model. Must be provided when starting training for the
     # first time.
-    self.inception_checkpoint_file = '/data/devilztt/image-caption/tf-densenet161.ckpt'
+    self.inception_checkpoint_file = '/home/ztt/im2txt_densenet/im2txt/pretrained/tf-densenet161.ckpt'
 
     # Dimensions of Inception v3 input images.
     self.image_height = 224
@@ -77,6 +77,8 @@ class ModelConfig(object):
     # If < 1.0, the dropout keep probability applied to LSTM variables.
     self.lstm_dropout_keep_prob = 0.7
 
+    self.number_step=12
+
 
 class TrainingConfig(object):
   """Wrapper class for training hyperparameters."""
@@ -84,10 +86,10 @@ class TrainingConfig(object):
   def __init__(self):
     """Sets the default training hyperparameters."""
     # Number of examples per epoch of training data.
-    self.num_examples_per_epoch = 30000
+    self.num_examples_per_epoch = 32000
 
     # Optimizer for training the model.
-    self.optimizer = "SGD"
+    self.optimizer = "Adam"
 
     # Learning rate for the initial phase of training.
     self.initial_learning_rate = 0.5
@@ -101,4 +103,4 @@ class TrainingConfig(object):
     self.clip_gradients = 5.0
 
     # How many model checkpoints to keep.
-    self.max_checkpoints_to_keep = 10
+    self.max_checkpoints_to_keep = 5

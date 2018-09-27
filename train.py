@@ -36,7 +36,7 @@ tf.flags.DEFINE_boolean("train_inception", False,
                         "Whether to train inception submodel variables.")
 tf.flags.DEFINE_integer("number_of_steps", 3750, "Number of training steps.")
 
-tf.flags.DEFINE_float("learning_rate", 0.1, "learning_rate.")
+tf.flags.DEFINE_float("learning_rate", 0.05, "learning_rate.")
 
 
 tf.flags.DEFINE_integer("log_every_n_steps", 30,
@@ -102,7 +102,7 @@ def main(unused_argv):
         variables=output_vars)
 
     tf.summary.scalar("learning_rate",learning_rate)
-    print('----------learning_rate----->>>>',learning_rate)
+    #print('----------learning_rate----->>>>',learning_rate)
     # Set up the Saver for saving and restoring model checkpoints.
     saver = tf.train.Saver(max_to_keep=training_config.max_checkpoints_to_keep)
 

@@ -140,6 +140,7 @@ def prefetch_input_data(reader,
 def batch_with_dynamic_pad(images_and_captions,
                            batch_size,
                            queue_capacity,
+                           num_step,
                            add_summaries=False):
   """Batches input images and captions.
 
@@ -196,14 +197,14 @@ def batch_with_dynamic_pad(images_and_captions,
   for image, caption in images_and_captions:
     
     def true_fn():
-      return tf.slice(caption, [0], [16])
+      return tf.slice(caption, [0], [num_step])
     
     def false_fn():
       return caption
     
     caption_length = tf.shape(caption)[0]
 
-    caption=tf.cond(caption_length>16,true_fn=true_fn,false_fn=false_fn)
+    caption=tf.cond(caption_length>num_step,true_fn=true_fn,false_fn=false_fn)
 
     caption_length = tf.shape(caption)[0]
 
@@ -214,7 +215,7 @@ def batch_with_dynamic_pad(images_and_captions,
     target_seq = tf.slice(caption, [1], input_length)
     indicator = tf.ones(input_length, dtype=tf.int64)#tf.ones(shape, dtype=tf.float32, name=None)
     
-    padding_lenth=tf.subtract(16,caption_length)
+    padding_lenth=tf.subtract(num_step,caption_length)
     padding=tf.zeros([padding_lenth],dtype=tf.int64)
     
     input_seq=tf.concat([input_seq,padding],0)
