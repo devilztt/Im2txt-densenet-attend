@@ -6,7 +6,7 @@ import argparse
 def parse_args(check=True):
     parser = argparse.ArgumentParser()
     parser.add_argument('--learning_rate', type=float, default=0.05)
-    parser.add_argument('--number_of_steps', type=int, default=3750)
+    parser.add_argument('--number_of_steps', type=int, default=2200)
 
     FLAGS, unparsed = parser.parse_known_args()
     return FLAGS, unparsed
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     k=3750
     print(os.getcwd())
     for i in range(40):
-        number_of_steps+=3750
+        number_of_steps+=2200
        # train 1 epoch
         print('################    train    ################')
         print(os.getcwd)
