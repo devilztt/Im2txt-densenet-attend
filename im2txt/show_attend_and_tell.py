@@ -114,7 +114,7 @@ class ShowAndTellModel(object):
     self.M = 384
     
     #隐层的大小
-    self.H = 1024
+    self.H = 256
     
     #时间步长
     self.T = config.number_step

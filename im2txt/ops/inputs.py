@@ -196,16 +196,20 @@ def batch_with_dynamic_pad(images_and_captions,
   enqueue_list = []
   for image, caption in images_and_captions:
     
-    def true_fn():
-      return tf.slice(caption, [0], [num_step])
+    for _ in range(3):
+      caption=tf.concat([caption,caption],0)
     
-    def false_fn():
-      return caption
+    # def true_fn():
+    #   return tf.slice(caption, [0], [num_step])
     
-    caption_length = tf.shape(caption)[0]
+    # def false_fn():
+    #   return caption
+    
+    # caption_length = tf.shape(caption)[0]
 
-    caption=tf.cond(caption_length>num_step,true_fn=true_fn,false_fn=false_fn)
-
+    # caption=tf.cond(caption_length>num_step,true_fn=true_fn,false_fn=false_fn)
+    caption=tf.slice(caption, [0], [num_step])
+    
     caption_length = tf.shape(caption)[0]
 
 
@@ -215,17 +219,14 @@ def batch_with_dynamic_pad(images_and_captions,
     target_seq = tf.slice(caption, [1], input_length)
     indicator = tf.ones(input_length, dtype=tf.int64)#tf.ones(shape, dtype=tf.float32, name=None)
     
-    padding_lenth=tf.subtract(num_step,caption_length)
-    padding=tf.zeros([padding_lenth],dtype=tf.int64)
+    #padding_lenth=tf.subtract(num_step,caption_length)
+    #padding=tf.zeros([padding_lenth],dtype=tf.int64)
+
     
-    input_seq=tf.concat([input_seq,padding],0)
-    target_seq=tf.concat([target_seq,padding],0)
-    indicator=tf.concat([indicator,padding],0)
-    # caption_length=len(caption)
-    # input_length=caption_length-1
-    # input_seq=caption[:input_length]
-    # target_seq=caption[1:input_length]
-    # indicator=np.ones([input_length])
+    #input_seq=tf.concat([input_seq,padding],0)
+    #target_seq=tf.concat([target_seq,padding],0)
+    #indicator=tf.concat([indicator,padding],0)
+    
 
     # input_seq=sequence.pad_sequences(input_seq, padding='post', maxlen=16)
     # target_seq=sequence.pad_sequences(target_seq, padding='post', maxlen=16)

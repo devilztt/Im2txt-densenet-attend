@@ -26,9 +26,9 @@ from im2txt import show_attend_and_tell
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.flags.DEFINE_string("input_file_pattern", "/data/devilztt/image-caption/train-?????-of-00016",
+tf.flags.DEFINE_string("input_file_pattern", "/data/devilztt/im2txt-flick8k/train-?????-of-00008",
                        "File pattern of sharded TFRecord input files.")
-tf.flags.DEFINE_string("inception_checkpoint_file", "/data/devilztt/image-caption/tf-densenet161.ckpt",
+tf.flags.DEFINE_string("inception_checkpoint_file", "/data/devilztt/im2txt-flick8k/tf-densenet161.ckpt",
                        "Path to a pretrained inception_v3 model.")
 tf.flags.DEFINE_string("train_dir", "/output",
                        "Directory for saving and loading model checkpoints.")

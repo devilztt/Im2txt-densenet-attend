@@ -36,7 +36,7 @@ from im2txt import show_attend_and_tell
 
 FLAGS = tf.flags.FLAGS
 
-tf.flags.DEFINE_string("input_file_pattern", "/data/devilztt/image-caption/val-00000-of-00001",
+tf.flags.DEFINE_string("input_file_pattern", "/data/devilztt/im2txt-flick8k/val-00000-of-00001",
                        "File pattern of sharded TFRecord input files.")
 tf.flags.DEFINE_string("checkpoint_dir", "/output",
                        "Directory containing model checkpoints.")

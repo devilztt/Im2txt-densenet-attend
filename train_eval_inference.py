@@ -41,7 +41,7 @@ if __name__ == '__main__':
         print('################    inference    ################')
         os.system('python3 ./run_inference.py')
 
-        learning_rate=learning_rate*0.85
+        learning_rate=learning_rate*0.9
         
 
 
