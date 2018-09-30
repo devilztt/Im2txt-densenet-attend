@@ -5,7 +5,7 @@ import argparse
 
 def parse_args(check=True):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--learning_rate', type=float, default=0.05)
+    parser.add_argument('--learning_rate', type=float, default=0.005)
     parser.add_argument('--number_of_steps', type=int, default=2200)
 
     FLAGS, unparsed = parser.parse_known_args()
@@ -42,6 +42,7 @@ if __name__ == '__main__':
         os.system('python3 ./run_inference.py')
 
         learning_rate=learning_rate*0.9
+
         
 
 
