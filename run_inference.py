@@ -34,7 +34,7 @@ FLAGS = tf.flags.FLAGS
 tf.flags.DEFINE_string("checkpoint_path", "/output",
                        "Model checkpoint file or directory containing a "
                        "model checkpoint file.")
-tf.flags.DEFINE_string("vocab_file", "/data/devilztt/image-caption/word_counts.txt", "Text file containing the vocabulary.")
+tf.flags.DEFINE_string("vocab_file", "/data/devilztt/im2txt-flick8k/word_counts.txt", "Text file containing the vocabulary.")
 
 tf.flags.DEFINE_string("input_files", "23445819_3a458716c1.jpg,17273391_55cfc7d3d4.jpg,27782020_4dab210360.jpg,35506150_cbdb630f4f.jpg,11.jpg",
                        "File pattern or comma-separated list of file patterns "
