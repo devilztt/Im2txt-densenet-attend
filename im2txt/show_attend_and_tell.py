@@ -29,7 +29,7 @@ import tensorflow as tf
 from im2txt.ops import image_embedding
 from im2txt.ops import image_processing
 from im2txt.ops import inputs as input_ops
-
+import pickle
 
 class ShowAndTellModel(object):
   """Image-to-text implementation based on http://arxiv.org/abs/1411.4555.
@@ -114,7 +114,9 @@ class ShowAndTellModel(object):
     self.M = 384
     
     #隐层的大小
-    self.H = 256
+    self.H = 512
+
+    self.alpha_c=1.0
     
     #时间步长
     self.T = config.number_step
@@ -125,6 +127,7 @@ class ShowAndTellModel(object):
 
     self.prev2out=True
 
+    self.embedding_map=pickle.load(open(config.embedding_file,'rb'))
   
   def is_training(self):
     """Returns true if the model is built for training mode."""
@@ -250,14 +253,15 @@ class ShowAndTellModel(object):
     Outputs:
       self.seq_embeddings
     """
-    with tf.variable_scope("seq_embedding"), tf.device("/cpu:0"):
-      #这里好像是随机初始化的embedding_map？ 
-      embedding_map = tf.get_variable(
-          name="map",
-          shape=[self.config.vocab_size, self.embedding_size],
-          initializer=self.initializer)
+    # with tf.variable_scope("seq_embedding"), tf.device("/cpu:0"):
+    #   #这里好像是随机初始化的embedding_map？ 
+    #   embedding_map = tf.get_variable(
+    #       name="map",
+    #       shape=[self.config.vocab_size, self.embedding_size],
+    #       initializer=self.initializer)
       #返回的是seq的向量列表，也就是说input seq是一个index列表
-      seq_embeddings = tf.nn.embedding_lookup(embedding_map, self.input_seqs)
+    embedding_map=self.embedding_map
+    seq_embeddings = tf.nn.embedding_lookup(embedding_map, self.input_seqs)
 
     self.seq_embeddings = seq_embeddings
     self.V=self.config.vocab_size
@@ -411,7 +415,7 @@ class ShowAndTellModel(object):
         #sequence_length = x.get_shape()[1]
         # sequence_length = tf.reduce_sum(self.input_mask, 1)
         # print(sequence_length.get_shape())
-        #因为前面在处理序列数据的时候padding后的总长度有37，所以这里循环37次
+
         for t in range(self.T-1):
             context, alpha = self._attention_layer(features, features_proj, h, reuse=(t!=0))#将features和h传入attention层，h代表当前状态，关注的是原图哪个区域
             alpha_list.append(alpha)#将得到的alpha添加到列表
@@ -422,7 +426,7 @@ class ShowAndTellModel(object):
             with tf.variable_scope('lstm_cell', reuse=(t!=0)):
                 _, (c, h) = lstm_cell(inputs=tf.concat( [x[:,t,:], context],1), state=[c, h])
 
-            logits = self._decode_lstm(x[:,t,:], h, context, dropout=False, reuse=(t!=0))
+            logits = self._decode_lstm(x[:,t,:], h, context, dropout=True, reuse=(t!=0))
 
             #lstm_logits.append(logits)
             #loss += tf.reduce_sum(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=captions_out[:, t],logits=logits)*tf.to_float(mask[:, t]))
@@ -446,12 +450,17 @@ class ShowAndTellModel(object):
       if self.mode == "inference":
         tf.nn.softmax(logits, name="softmax")
       else:
+        if self.alpha_c > 0:
+            alphas = tf.transpose(tf.stack(alpha_list), (1, 0, 2))     # (N, T, L)
+            alphas_all = tf.reduce_sum(alphas, 1)      # (N, L)
+            alpha_reg = self.alpha_c * tf.reduce_sum((16./196 - alphas_all) ** 2)
+
+
         targets = tf.reshape(captions_out, [-1])
         weights = tf.to_float(tf.reshape(self.input_mask, [-1]))
 
         # Compute losses.
-        losses = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=targets,
-                                                                logits=logits)
+        losses = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=targets,logits=logits)+alpha_reg
         batch_loss = tf.div(tf.reduce_sum(tf.multiply(losses, weights)),
                             tf.reduce_sum(weights),
                             name="batch_loss")

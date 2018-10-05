@@ -28,13 +28,13 @@ class ModelConfig(object):
     # File pattern of sharded TFRecord file containing SequenceExample protos.
     # Must be provided in training and evaluation modes.
     self.input_file_pattern = None
-
+    self.embedding_file='/data/devilztt/im2txt-flick8k/embeddings.pkl'
     # Image format ("jpeg" or "png").
     self.image_format = "jpeg"
 
     # Approximate number of values per input shard. Used to ensure sufficient
     # mixing between shards in training.
-    self.values_per_input_shard = 4375
+    self.values_per_input_shard = 1875
     # Minimum number of shards to keep in the input queue.
     self.input_queue_capacity_factor = 2
     # Number of threads for prefetching SequenceExample protos.
@@ -50,13 +50,13 @@ class ModelConfig(object):
     # for differences between tokenizer versions used in preprocessing. There is
     # no harm in using a value greater than the actual vocab size, but using a
     # value less than the actual vocab size will result in an error.
-    self.vocab_size = 3387
+    self.vocab_size = 3386
 
     # Number of threads for image preprocessing. Should be a multiple of 2.
     self.num_preprocess_threads = 4
 
     # Batch size.
-    self.batch_size =  16
+    self.batch_size = 2
 
     # File containing an Inception v3 checkpoint to initialize the variables
     # of the Inception model. Must be provided when starting training for the
@@ -71,13 +71,13 @@ class ModelConfig(object):
     self.initializer_scale = 0.08
 
     # LSTM input and output dimensionality, respectively.
-    self.embedding_size = 384
-    self.num_lstm_units = 256
+    self.embedding_size = 512
+    self.num_lstm_units = 512
 
     # If < 1.0, the dropout keep probability applied to LSTM variables.
     self.lstm_dropout_keep_prob = 0.7
 
-    self.number_step=15
+    self.number_step=16
 
 
 class TrainingConfig(object):
@@ -86,7 +86,7 @@ class TrainingConfig(object):
   def __init__(self):
     """Sets the default training hyperparameters."""
     # Number of examples per epoch of training data.
-    self.num_examples_per_epoch = 35000
+    self.num_examples_per_epoch = 35
 
     # Optimizer for training the model.
     self.optimizer = "Adam"
