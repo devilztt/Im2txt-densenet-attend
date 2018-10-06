@@ -92,7 +92,7 @@ def main(unused_argv):
 
     output_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='lstm')
     print(output_vars)
-    print('-----------learning_rate',learning_rate)
+    #print('-----------learning_rate',learning_rate)
     # Set up the training ops.
     train_op = tf.contrib.layers.optimize_loss(
         loss=model.total_loss,
@@ -103,7 +103,7 @@ def main(unused_argv):
         learning_rate_decay_fn=learning_rate_decay_fn,
         variables=output_vars)
 
-    #tf.summary.scalar("learning_rate",learning_rate)
+    tf.summary.scalar("learning_rate",learning_rate)
     #print('----------learning_rate----->>>>',learning_rate)
     # Set up the Saver for saving and restoring model checkpoints.
     saver = tf.train.Saver(max_to_keep=training_config.max_checkpoints_to_keep)

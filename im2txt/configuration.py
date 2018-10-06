@@ -34,7 +34,7 @@ class ModelConfig(object):
 
     # Approximate number of values per input shard. Used to ensure sufficient
     # mixing between shards in training.
-    self.values_per_input_shard = 1875
+    self.values_per_input_shard = 4375
     # Minimum number of shards to keep in the input queue.
     self.input_queue_capacity_factor = 2
     # Number of threads for prefetching SequenceExample protos.
@@ -86,15 +86,15 @@ class TrainingConfig(object):
   def __init__(self):
     """Sets the default training hyperparameters."""
     # Number of examples per epoch of training data.
-    self.num_examples_per_epoch = 35
+    self.num_examples_per_epoch = 35000
 
     # Optimizer for training the model.
-    self.optimizer = "Adam"
+    self.optimizer = "SGD"
 
     # Learning rate for the initial phase of training.
     self.initial_learning_rate = 0.5
-    self.learning_rate_decay_factor = 0.5
-    self.num_epochs_per_decay = 8.0
+    self.learning_rate_decay_factor = 0.7
+    self.num_epochs_per_decay = 15.0
 
     # Learning rate when fine tuning the Inception v3 parameters.
     self.train_inception_learning_rate = 0.0005

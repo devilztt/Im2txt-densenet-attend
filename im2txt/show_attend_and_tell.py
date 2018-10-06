@@ -304,7 +304,7 @@ class ShowAndTellModel(object):
           b = tf.get_variable('b', [self.D], initializer=self.const_initializer)
           w_att = tf.get_variable('w_att', [self.D, 1], initializer=self.weight_initializer)
 
-          h_att = tf.nn.relu(features_proj + tf.expand_dims(tf.matmul(h, w), 1) + b)    # (N, L, D)
+          h_att = tf.nn.elu(features_proj + tf.expand_dims(tf.matmul(h, w), 1) + b)    # (N, L, D)
           out_att = tf.reshape(tf.matmul(tf.reshape(h_att, [-1, self.D]), w_att), [-1, self.L])   # (N, L)
           alpha = tf.nn.softmax(out_att)
           context = tf.reduce_sum(features * tf.expand_dims(alpha, 2), 1, name='context')   #(N, D)
