@@ -36,7 +36,7 @@ tf.flags.DEFINE_boolean("train_inception", False,
                         "Whether to train inception submodel variables.")
 tf.flags.DEFINE_integer("number_of_steps", 3750, "Number of training steps.")
 
-tf.flags.DEFINE_float("learning_rate", 0.05, "learning_rate.")
+tf.flags.DEFINE_float("learning_rate", 0.005, "learning_rate.")
 
 
 tf.flags.DEFINE_integer("log_every_n_steps", 30,
@@ -91,6 +91,8 @@ def main(unused_argv):
         learning_rate_decay_fn = _learning_rate_decay_fn
 
     output_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='lstm')
+    print(output_vars)
+    print('-----------learning_rate',learning_rate)
     # Set up the training ops.
     train_op = tf.contrib.layers.optimize_loss(
         loss=model.total_loss,
@@ -101,7 +103,7 @@ def main(unused_argv):
         learning_rate_decay_fn=learning_rate_decay_fn,
         variables=output_vars)
 
-    tf.summary.scalar("learning_rate",learning_rate)
+    #tf.summary.scalar("learning_rate",learning_rate)
     #print('----------learning_rate----->>>>',learning_rate)
     # Set up the Saver for saving and restoring model checkpoints.
     saver = tf.train.Saver(max_to_keep=training_config.max_checkpoints_to_keep)

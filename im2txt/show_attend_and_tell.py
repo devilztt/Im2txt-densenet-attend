@@ -318,7 +318,7 @@ class ShowAndTellModel(object):
           # b_out = tf.get_variable('b_out', [self.V], initializer=self.const_initializer)
 
           if dropout:
-              h = tf.nn.dropout(h, 0.5)
+              h = tf.nn.dropout(h, 0.7)
           h_logits = tf.matmul(h, w_h) + b_h # self.M
 
           if self.ctx2out:
@@ -330,7 +330,7 @@ class ShowAndTellModel(object):
           h_logits = tf.nn.tanh(h_logits)
 
           if dropout:
-              h_logits = tf.nn.dropout(h_logits, 0.5)
+              h_logits = tf.nn.dropout(h_logits, 0.7)
           # out_logits = tf.matmul(h_logits, w_out) + b_out
           return h_logits
 
