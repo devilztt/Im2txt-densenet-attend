@@ -1,6 +1,10 @@
 # Im2txt with densenet and attention
 
-> 本项目在google Tensorflow中 的im2txt和show attend and tell 论文的基础上，将inception网络替换为densenet，作为CNN编码器，然后加入了自己理解的attention机制
+> 本项目在google Tensorflow中 的im2txt和show attend and tell 论文的基础上，将inception网络替换为densenet，作为CNN编码器，然后加入了自己理解的attention机制，
+
+
+
+[TOC]
 
 ## 数据集准备
 
@@ -806,6 +810,30 @@ beam search 的核心思想就是设置一个k，每次预测的时候取前k个
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+----
+
+**参考文章等**
+
+[https://blog.csdn.net/shenxiaolu1984/article/details/51493673#fnref:1](https://blog.csdn.net/shenxiaolu1984/article/details/51493673#fnref:1)
+
+[https://github.com/tensorflow/models/tree/master/research/im2txt](https://github.com/tensorflow/models/tree/master/research/im2txt)
+
+[https://blog.csdn.net/chazhongxinbitc/article/details/78689754](https://blog.csdn.net/chazhongxinbitc/article/details/78689754)
+
+[https://blog.csdn.net/luoyang224/article/details/76599736](https://blog.csdn.net/luoyang224/article/details/76599736)
 
 
 
