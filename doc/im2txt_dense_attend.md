@@ -527,6 +527,11 @@ output_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'lstm')
 
 
 
+**训练结果**
+
+![](https://i.imgur.com/E1BcURZ.png)
+
+
 ## 模型校验
 
 大致步骤和一般的模型一样，先建立模型，然后restore ckpt的权重，再run一次整个模型，得到softmax 后的logits，再对比label，用评价指标进行校验，这里使用的是tensorflow里面的校验脚本
@@ -801,8 +806,11 @@ beam search 的核心思想就是设置一个k，每次预测的时候取前k个
       print("  %d) %s (p=%f)" % (i, sentence, math.exp(caption.logprob)))
   ```
 
+**预测结果**
 
+对训练数据的预测
 
+![](https://i.imgur.com/xr8E6gb.jpg)
 ## 模型移植
 
 
